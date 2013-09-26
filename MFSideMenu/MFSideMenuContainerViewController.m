@@ -300,16 +300,22 @@ typedef enum {
     if(!self.leftMenuViewController) return;
     [self.menuContainerView bringSubviewToFront:[self.leftMenuViewController view]];
     [self setCenterViewControllerOffset:self.leftMenuWidth animated:YES completion:completion];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(self.leftMenuWidth, 0.0f);
 }
 
 - (void)openRightSideMenuCompletion:(void (^)(void))completion {
     if(!self.rightMenuViewController) return;
     [self.menuContainerView bringSubviewToFront:[self.rightMenuViewController view]];
     [self setCenterViewControllerOffset:-1*self.rightMenuWidth animated:YES completion:completion];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(self.rightMenuWidth, 0.0f);
 }
 
 - (void)closeSideMenuCompletion:(void (^)(void))completion {
     [self setCenterViewControllerOffset:0 animated:YES completion:completion];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(0, 0.0f);
 }
 
 - (void)setMenuState:(MFSideMenuState)menuState {
@@ -461,6 +467,8 @@ typedef enum {
     };
     
     [self setCenterViewControllerOffset:offset additionalAnimations:effects animated:animated completion:nil];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(offset, 0.0f);
 }
 
 - (void)setRightMenuWidth:(CGFloat)rightMenuWidth animated:(BOOL)animated {
@@ -477,6 +485,8 @@ typedef enum {
     };
     
     [self setCenterViewControllerOffset:offset additionalAnimations:effects animated:animated completion:nil];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(offset, 0.0f);
 }
 
 
@@ -599,6 +609,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             } else {
                 self.panGestureVelocity = 0;
                 [self setCenterViewControllerOffset:0 animated:YES completion:nil];
+                UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+                statusBarView.transform = CGAffineTransformMakeTranslation(0, 0.0f);
             }
         } else {
             BOOL hideMenu = (finalX > adjustedOrigin.x);
@@ -608,12 +620,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             } else {
                 self.panGestureVelocity = 0;
                 [self setCenterViewControllerOffset:adjustedOrigin.x animated:YES completion:nil];
+                UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+                statusBarView.transform = CGAffineTransformMakeTranslation(adjustedOrigin.x, 0.0f);
             }
         }
         
         self.panDirection = MFSideMenuPanDirectionNone;
 	} else {
         [self setCenterViewControllerOffset:translatedPoint.x];
+        UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+        statusBarView.transform = CGAffineTransformMakeTranslation(translatedPoint.x, 0.0f);
     }
 }
 
@@ -638,6 +654,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
     
     [self setCenterViewControllerOffset:translatedPoint.x];
+    UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+    statusBarView.transform = CGAffineTransformMakeTranslation(translatedPoint.x, 0.0f);
     
 	if(recognizer.state == UIGestureRecognizerStateEnded) {
         CGPoint velocity = [recognizer velocityInView:view];
@@ -652,6 +670,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             } else {
                 self.panGestureVelocity = 0;
                 [self setCenterViewControllerOffset:0 animated:YES completion:nil];
+                UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+                statusBarView.transform = CGAffineTransformMakeTranslation(0, 0.0f);
             }
         } else {
             BOOL hideMenu = (finalX < adjustedOrigin.x);
@@ -661,10 +681,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             } else {
                 self.panGestureVelocity = 0;
                 [self setCenterViewControllerOffset:adjustedOrigin.x animated:YES completion:nil];
+                UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+                statusBarView.transform = CGAffineTransformMakeTranslation(adjustedOrigin.x, 0.0f);
             }
         }
 	} else {
         [self setCenterViewControllerOffset:translatedPoint.x];
+        UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+        statusBarView.transform = CGAffineTransformMakeTranslation(translatedPoint.x, 0.0f);
     }
 }
 
@@ -707,12 +731,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         
         [UIView animateWithDuration:duration animations:^{
             [self setCenterViewControllerOffset:offset];
+            UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+            statusBarView.transform = CGAffineTransformMakeTranslation(offset, 0.0f);
             if(additionalAnimations) additionalAnimations();
         } completion:^(BOOL finished) {
             innerCompletion();
         }];
     } else {
         [self setCenterViewControllerOffset:offset];
+        UIView *statusBarView = [[UIApplication sharedApplication] valueForKey:[@[@"status", @"Bar"] componentsJoinedByString:@""]];
+        statusBarView.transform = CGAffineTransformMakeTranslation(offset, 0.0f);
         if(additionalAnimations) additionalAnimations();
         innerCompletion();
     }
