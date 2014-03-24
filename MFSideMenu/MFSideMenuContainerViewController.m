@@ -324,10 +324,10 @@ typedef enum {
 
 - (void)setMenuState:(MFSideMenuState)menuState completion:(void (^)(void))completion {
     void (^innerCompletion)() = ^ {
-        _menuState = menuState;
+        self->_menuState = menuState;
         
         [self setUserInteractionStateForCenterViewController];
-        MFSideMenuStateEvent eventType = (_menuState == MFSideMenuStateClosed) ? MFSideMenuStateEventMenuDidClose : MFSideMenuStateEventMenuDidOpen;
+        MFSideMenuStateEvent eventType = (self->_menuState == MFSideMenuStateClosed) ? MFSideMenuStateEventMenuDidClose : MFSideMenuStateEventMenuDidOpen;
         [self sendStateEventNotification:eventType];
         
         if(completion) completion();
